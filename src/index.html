@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/jquery-ui.css" rel="stylesheet">
+     <script src="js/jquery-3.2.1.js"></script>
+     <script src="js/popper.js"></script>
+     <script src="js/bootstrap.min.js"></script>
+     <script src="js/jquery-ui.js"></script>
+     <script src="js/truffle-contract.js"></script>
+     <script>
+     adrSalaryMan = '0x4e71920b7330515faf5ea0c690f1ad06a85fb60c';
+     contracts = {};
+
+
+      employees =[];
+
+     function addEmployeeFunction() {
+       var elen = employees.length;
+        employees.push($('#newEmployee').val());
+        $('#contractsList').append("<tr><td>"+employees[elen]+"</tr>");
+        elen +=1;
+        salarymanInstance.newEmployee(adrSalaryMan);
+        console.log(salarymanInstance);
+     }
+
+
+
+     $(document).ready(function(){
+       $("#salaryManAdress").hide().text("Salary Man: " + adrSalaryMan).fadeIn(500).effect("bounce",{ times: 3, distance:15 }, "slow");
+       $("#salaryManBalance").text("test " + getBalance(adrSalaryMan,"#salaryManBalance")).hide().fadeIn(500);
+
+        $('#addEmployee').click(addEmployeeFunction);
+        $("#updateContract").click(function(){
+          $("#test").hide();
+          $("#test").text("Contract: " + $("#contractNumber").val());
+        $("#test").fadeIn(500);
+        $("#test").effect( "bounce", { times: 3, distance:15 }, "slow" );
+        var balance = getBalance($("#contractNumber").val(),'#balance');
+        console.log(balance);
+        $("#balance").text("test " + getBalance($("#contractNumber").val()));
+
+
+
+
+
+ });
+    function web3callback(error,res)
+    {
+      console.log("error: " + error + " "+ "result: " + res);
+
+    }
+     $("#sendfunds").click(function (){
+       var transaction = {
+         from: $('#contractNumber').val(),
+         to: $('#sendToContractNumber').val(),
+         value: web3.toWei($('#sendToAmount').val(),"ether")
+       };
+       web3.eth.sendTransaction(transaction,web3callback);
+     })
+});
+
+if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+}
+
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  //console.log(web3);
+var abi;
+var salarymanInstance;
+var SalaryMan;
+var event;
+var filter;
+var allevents;
+
+abi = $.getJSON('SalaryMan.json', function(data) {
+abi = data.abi;
+SalaryMan = web3.eth.contract(abi);
+salarymanInstance = SalaryMan.at(adrSalaryMan);
+//console.log("this is it");
+//console.log(salarymanInstance);
+console.log("test");
+event = salarymanInstance.PaymentReceived(function(error, result) {
+  if (!error) {
+    console.log("Payment received");
+    $("#salaryManBalance").text(getBalance(adrSalaryMan,'#salaryManBalance')).hide().fadeIn(500);
+
+  console.log(result);
+  }
+
+
+});
+
+/*allevents = salarymanInstance.allEvents();
+allevents.watch(function(error,log){console.log(log);});
+filter = web3.eth.filter('pending');*/
+
+
+
+//console.log("event");
+//console.log(event);
+});
+
+//console.log(abi);
+function getBalance (address,fieldID) {
+  var balance2 = new web3.BigNumber('0');
+balance2 =  web3.eth.getBalance(address, function (error, result) {
+    if (!error) {
+      console.log("Good: " + web3.fromWei(result.toNumber(), 'Ether'));
+      result = web3.fromWei(result.toNumber(), 'Ether');
+      $(fieldID).text(result);
+     return result;
+    } else {
+      console.error(error);
+    }
+
+  });
+
+  //console.log(balance2);
+}
+
+
+
+     </script>
+  </head>
+
+<body>
+  <div class="container">
+
+  <div class="row">
+<div class="col-sm">
+
+<div class="card bg-info" style="width:600px;height:800">
+   <img class="card-img-top" src="ethereum-bw.png" alt="Card image" style="width:100%">
+   <div class="card-body">
+         <h6 class="card-title text-white" id=""> <span id="salaryManAdress" class="text-white"  style="height:20px"></span></h6>
+         <h6 class="card-title">Balance: <span id="salaryManBalance"></span></h6>
+
+         <div class="form-group">
+           <br>
+           <label for="newEmployee" class="text-capitalize">New employee:</label>
+           <input type="text" class="form-control bg-warning text-red btn btn-info" id="newEmployee"><br><br>
+           <button type="button" class="btn btn-primary" id="addEmployee">Add Employee</button>
+         </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+<th>Contract number</th>
+<th>Send amount</th>
+<th>TX Amount</th>
+<th>Last transaction</th>
+            </tr>
+
+            </thead>
+            <tbody id="contractsList">
+            </tbody>
+            </table>
+
+
+
+
+
+
+       </div>
+     </div>
+   </td>
+</div>
+<div class="col-sm">
+<div class="card bg-info" style="width:400px;height:800">
+   <img class="card-img-top" src="ethereum-bw.png" alt="Card image" style="width:100%">
+   <div class="card-body">
+         <h6 class="card-title text-white" id="test">Contract: <span class="text-white"  style="height:20px"></span></h6>
+         <h6 class="card-title">Balance: <span id="balance"></span></h6>
+         <h6 class="card-title">TX count:</h6>
+         <h6 class="card-title">Last transaction:<h6>
+
+
+
+
+         <div class="form-group">
+           <br>
+           <label for="contractNumber">From contract:</label>
+           <input type="text" class="form-control bg-warning text-red btn btn-info" id="contractNumber">
+           <script>
+            $('#contractNumber').val(web3.eth.coinbase);
+           </script>
+           <br><br>
+           <button type="button" class="btn btn-primary" id="updateContract">Update Contract</button>
+            <button type="button" class="btn btn-primary" id="setToCoinBase">Set To Coinbase</button>
+            <script>
+            $('#setToCoinBase').click(function(){  $('#contractNumber').val(web3.eth.coinbase);})
+            </script>
+           <br>
+           <br>
+            <label for="sendToContractNumber">Send to contract:</label>
+            <div class="dropdown small">
+            <button class="btn btn-sm btn-block btn-primary dropdown-toggle small" type="button" data-toggle="dropdown">Send Money To <span class="caret"></span></button>
+            <ul class="dropdown-menu small" id="listaKont">
+              <script>
+              function iteruj(item,index)
+              {
+                if(index == (konta.length-1))   $('#listaKont').append ("<li class='bg-warning'><a href=# class=''>"+item+"</a></li>")
+                else {
+                  $('#listaKont').append ("<li><a href=# class=''>"+item+"</a></li>")
+
+                }
+              }
+              var konta = web3.eth.accounts;
+              konta.push(adrSalaryMan);
+              konta.forEach(iteruj);
+              </script>
+              <li></li>
+         </ul>
+        </div>
+        <script>
+        $(function(){
+
+   $(".dropdown-menu li").click(function(){
+
+     $("#sendToContractNumber").val( $(this).text());
+     $("#sendToContractNumber").attr({"style":"font-size:x-small"});
+
+    // $(".btn:first-child").val($(this).text());
+
+  });
+
+});
+        </script>
+            <input type="text" class="form-control bg-primary text-red btn btn-info" id="sendToContractNumber">
+            </div>
+            <label for="sendToAmount">Amount:</label>
+            <input type="number" class="form-control bg-primary text-red btn btn-info" id="sendToAmount">
+            <br><br>
+            <button type="button" class="btn btn-primary" id="sendfunds">Send money</button>
+         </div>
+
+
+       </div>
+     </div>
+</div>
+</div>
+</div>
+</body>
+
+
+</html>
