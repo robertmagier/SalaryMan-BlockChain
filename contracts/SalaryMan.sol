@@ -4,39 +4,36 @@ pragma solidity ^0.4.18;
 contract SalaryMan {
 
     struct Employee {
-        address addr;
         uint256 totalAmount;
-
+        string fName;
+        string lName;
     }
 
-    event PaymentReceived(uint value);
+    mapping (address => Employee) employees;
+    address[] public employeeAccts;
 
-    uint numEmployees;
-    mapping(uint=>Employee) employees;
-
-    function newEmployee(address adr) public returns (uint employeeID) {
-        employeeID = numEmployees++;
-        employees[employeeID] = Employee(adr,0);
-
-    }
-
-    function getNumEmployees() public view returns (uint)
+    function setEmployee(address _address, string _fName, string _lName) public returns(uint)
     {
-        return numEmployees;
+        var employee = employees[_address];
+        employee.fName = _fName;
+        employee.lName = _lName;
+
+        employeeAccts.push(_address) - 1;
     }
 
-    function getEmployee(uint empID) public returns (Employee person) {
-        person = employees[empID];
+    function getEmployees() view public returns(address[])
+    {
+        return employeeAccts;
     }
 
-    function depositFunds() public payable returns(bool success) {
-    LogDep(msg.sender, msg.value, this.balance);
-    return true;
-  }
-  event LogDep (address sender,    uint amount, uint balance);
-
-    function() public payable {
-      PaymentReceived(msg.value);
-
+    function getEmployee(address _address) public view returns(string, string, uint256)
+    {
+        return (employees[_address].fName, employees[_address].lName, employees[_address].totalAmount);
     }
+
+    function countEmployees() public view returns(uint)
+    {
+      return employeeAccts.length;
+    }
+
 }
