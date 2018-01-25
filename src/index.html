@@ -11,12 +11,12 @@
      <script src="js/bootstrap.min.js"></script>
      <script src="js/jquery-ui.js"></script>
      <script src="js/truffle-contract.js"></script>
+     <script src="js/App.js"></script>
      <script>
-     adrSalaryMan = '0x4e71920b7330515faf5ea0c690f1ad06a85fb60c';
-     contracts = {};
 
 
-      employees =[];
+
+
 
      function addEmployeeFunction() {
        var elen = employees.length;
@@ -63,15 +63,7 @@
      })
 });
 
-if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider);
-} else {
-  // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-}
 
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  //console.log(web3);
 var abi;
 var salarymanInstance;
 var SalaryMan;
@@ -79,33 +71,6 @@ var event;
 var filter;
 var allevents;
 
-abi = $.getJSON('SalaryMan.json', function(data) {
-abi = data.abi;
-SalaryMan = web3.eth.contract(abi);
-salarymanInstance = SalaryMan.at(adrSalaryMan);
-//console.log("this is it");
-//console.log(salarymanInstance);
-console.log("test");
-event = salarymanInstance.PaymentReceived(function(error, result) {
-  if (!error) {
-    console.log("Payment received");
-    $("#salaryManBalance").text(getBalance(adrSalaryMan,'#salaryManBalance')).hide().fadeIn(500);
-
-  console.log(result);
-  }
-
-
-});
-
-/*allevents = salarymanInstance.allEvents();
-allevents.watch(function(error,log){console.log(log);});
-filter = web3.eth.filter('pending');*/
-
-
-
-//console.log("event");
-//console.log(event);
-});
 
 //console.log(abi);
 function getBalance (address,fieldID) {
