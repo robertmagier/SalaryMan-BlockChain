@@ -1,13 +1,38 @@
 /*************Change this when creating new contract ************/
-adrSalaryMan = '0x1411cb266fced1587b0aa29e9d5a9ef3db64a9c5';
+adrSalaryMan = '0x90d6832d014b5a4417a5f904c60edd4268df250e';
 
 
 function getEmployees()
 {
+  $('#contractsList').empty();
   salaryManInstance.countEmployees((err,res) => {
     if(res)
-      console.log(res.toNumber());
+    {
+      var empcount = res.toNumber();
+      salaryManInstance.getEmployees((err,res) =>{
+        console.log(res);
+        var empadresses = res;
+        var i =0;
+        for(i=0;i<empcount;i++) {
+          console.log(i);
+        salaryManInstance.getEmployee(empadresses[i],function(err2,res2){
+
+
+        console.log(web3.toAscii(res2[0]));
+        console.log(web3.toAscii(res2[1]));
+        console.log((res2[3].toNumber()));
+        $('#contractsList').append("<tr><td>"+res2[0]+"<td>"+web3.toAscii(res2[1])+"<td>"+web3.toAscii(res2[2])+"<td>"+i+"</tr>");
+
+        });
+        }
+
+      });
+
+    }
+
   });
+
+
 
 
  }
@@ -27,19 +52,19 @@ function addEmployeeFunction() {
   lNameEmp = $('#lNameEmp').val()
   adrEmp = $('#adrEmp').val()
 
-  //$('#contractsList').append("<tr><td>"+employees[elen]+"</tr>");
+
    //elen +=1;
 
    salaryManInstance.setEmployee(adrEmp,fNameEmp,lNameEmp, web3callback);
 
    $('#addEmpPreloaderBtn').fadeOut();
    $('#addEmpPreloaderBtn').fadeIn();
-   $('#addEmpBtn').prop("disabled", true).addClass("ui-state-disabled")
+  // $('#addEmpBtn').prop("disabled", true).addClass("ui-state-disabled")
    //console.log(salarymanInstance);
 }
 
      $(document).ready(function(){
-       getEmployees();
+       //getEmployees();
        $("#salaryManAdress").hide().text("Salary Man: " + adrSalaryMan).fadeIn(500).effect("bounce",{ times: 3, distance:15 }, "slow");
        $("#salaryManBalance").text("test " + getBalance(adrSalaryMan,"#salaryManBalance")).hide().fadeIn(500);
 
@@ -80,7 +105,7 @@ if (typeof web3 !== 'undefined') {
   // set the provider you want from Web3.providers
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 }
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+ web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   //console.log(web3);
 
   //Parse Solidity contract and create new contract salaryManInstance
@@ -117,7 +142,7 @@ if (typeof web3 !== 'undefined') {
             //$('#lNameEmp').val('');
             //$('#adrEmp').val('');
             console.log(result.args);
-            getEmployees();
+           getEmployees();
 
 }});
 

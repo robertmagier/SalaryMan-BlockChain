@@ -56,9 +56,9 @@ contract SalaryMan is Owned {
         return employeeAccts;
     }
 
-    function getEmployee(address _address) public view returns(bytes16, bytes16, uint256)
+    function getEmployee(address _address) public view returns(address, bytes16, bytes16, uint256)
     {
-        return (employees[_address].fName, employees[_address].lName, employees[_address].totalAmount);
+        return (_address, employees[_address].fName, employees[_address].lName, employees[_address].totalAmount);
     }
 
     function countEmployees() public view returns(uint)
