@@ -65,4 +65,10 @@ contract SalaryMan is Owned {
     {
       return employeeAccts.length;
     }
+
+    function getBalance() returns (uint){
+      return this.balance;
+      
+    }
+
 }
