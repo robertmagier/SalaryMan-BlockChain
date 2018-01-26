@@ -18,50 +18,9 @@
 
 
 
-     function addEmployeeFunction() {
-       var elen = employees.length;
-        employees.push($('#newEmployee').val());
-        $('#contractsList').append("<tr><td>"+employees[elen]+"</tr>");
-        elen +=1;
-        salarymanInstance.newEmployee(adrSalaryMan);
-        console.log(salarymanInstance);
-     }
 
 
 
-     $(document).ready(function(){
-       $("#salaryManAdress").hide().text("Salary Man: " + adrSalaryMan).fadeIn(500).effect("bounce",{ times: 3, distance:15 }, "slow");
-       $("#salaryManBalance").text("test " + getBalance(adrSalaryMan,"#salaryManBalance")).hide().fadeIn(500);
-
-        $('#addEmployee').click(addEmployeeFunction);
-        $("#updateContract").click(function(){
-          $("#test").hide();
-          $("#test").text("Contract: " + $("#contractNumber").val());
-        $("#test").fadeIn(500);
-        $("#test").effect( "bounce", { times: 3, distance:15 }, "slow" );
-        var balance = getBalance($("#contractNumber").val(),'#balance');
-        console.log(balance);
-        $("#balance").text("test " + getBalance($("#contractNumber").val()));
-
-
-
-
-
- });
-    function web3callback(error,res)
-    {
-      console.log("error: " + error + " "+ "result: " + res);
-
-    }
-     $("#sendfunds").click(function (){
-       var transaction = {
-         from: $('#contractNumber').val(),
-         to: $('#sendToContractNumber').val(),
-         value: web3.toWei($('#sendToAmount').val(),"ether")
-       };
-       web3.eth.sendTransaction(transaction,web3callback);
-     })
-});
 
 
 var abi;
@@ -102,16 +61,25 @@ balance2 =  web3.eth.getBalance(address, function (error, result) {
 <div class="col-sm">
 
 <div class="card bg-info" style="width:600px;height:800">
-   <img class="card-img-top" src="ethereum-bw.png" alt="Card image" style="width:100%">
+   <img class="card-img-top" src="ethereum-bw.png" style="height:50px" alt="Card image" style="width:100%">
    <div class="card-body">
          <h6 class="card-title text-white" id=""> <span id="salaryManAdress" class="text-white"  style="height:20px"></span></h6>
          <h6 class="card-title">Balance: <span id="salaryManBalance"></span></h6>
 
          <div class="form-group">
            <br>
-           <label for="newEmployee" class="text-capitalize">New employee:</label>
-           <input type="text" class="form-control bg-warning text-red btn btn-info" id="newEmployee"><br><br>
-           <button type="button" class="btn btn-primary" id="addEmployee">Add Employee</button>
+           <label for="fNameEmp" class="text-capitalize">First Name:</label>
+           <input type="text" class="form-control bg-warning text-red btn btn-info" id="fNameEmp" value="Robert">
+           <label for="lNameEmp" class="text-capitalize">Last Name:</label>
+           <input type="text" class="form-control bg-warning text-red btn btn-info" id="lNameEmp" value="Magier">
+           <label for="adrEmp" class="text-capitalize">Address:</label>
+           <input type="text" class="form-control bg-warning text-red btn btn-info" id="adrEmp" value="0x1411cb266fced1587b0aa29e9d5a9ef3db64a9c5">
+
+           <br><br>
+
+           <button type="button" class="btn btn-primary" id="addEmpBtn">Add Employee
+
+           </button>   <img src="preloader.gif" height=30 id="addEmpPreloaderBtn" style="display:none">
          </div>
 
           <table class="table table-bordered">
@@ -139,7 +107,7 @@ balance2 =  web3.eth.getBalance(address, function (error, result) {
 </div>
 <div class="col-sm">
 <div class="card bg-info" style="width:400px;height:800">
-   <img class="card-img-top" src="ethereum-bw.png" alt="Card image" style="width:100%">
+   <img class="card-img-top" src="ethereum-bw.png" style="height:50px" alt="Card image" style="width:100%">
    <div class="card-body">
          <h6 class="card-title text-white" id="test">Contract: <span class="text-white"  style="height:20px"></span></h6>
          <h6 class="card-title">Balance: <span id="balance"></span></h6>

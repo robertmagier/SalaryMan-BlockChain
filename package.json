@@ -19,6 +19,7 @@
     "boostrap": "^2.0.0",
     "bootstrap": "^3.3.7",
     "solc": "^0.4.19",
-    "truffle-contract": "^3.0.2"
+    "truffle-contract": "^3.0.2",
+    "web3": "^0.20.4"
   }
 }
